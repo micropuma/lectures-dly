@@ -1,0 +1,1 @@
+nsys profile -o overview ./divergence

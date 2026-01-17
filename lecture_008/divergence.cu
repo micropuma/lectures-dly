@@ -12,6 +12,7 @@ __global__ void processArrayWithDivergence(int *data, int N) {
     }
 }
 
+// Flags写法很妙
 __global__ void processArrayWithoutDivergence(int *data, int N) {
     int idx = blockIdx.x * blockDim.x + threadIdx.x;
     if (idx < N) {
