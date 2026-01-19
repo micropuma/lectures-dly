@@ -8,6 +8,13 @@ __global__ void copyDataNonCoalesced(float *in, float *out, int n) {
     }
 }
 
+__global__ void copyDataNonColaesced2(float *in, float *out, int n) {
+    int index = blockIdx.x * blockDim.x + threadIdx.x;
+    if (index < n) {
+        out[index] = in[(index + 1) % n];
+    }
+}
+
 __global__ void copyDataCoalesced(float *in, float *out, int n) {
     int index = blockIdx.x * blockDim.x + threadIdx.x;
     if (index < n) {
@@ -42,6 +49,12 @@ int main() {
 
     // Launch coalesced kernel
     copyDataCoalesced<<<numBlocks, blockSize>>>(in, out, n);
+    cudaDeviceSynchronize();
+
+    initializeArray(out, n); // Reset output array
+
+    // Launch coalesced kernel
+    copyDataNonColaesced2<<<numBlocks, blockSize>>>(in, out, n);
     cudaDeviceSynchronize();
 
     cudaFree(in);
